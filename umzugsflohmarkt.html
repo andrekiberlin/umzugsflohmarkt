@@ -481,7 +481,8 @@
     font-size: 0.8rem;
     font-family: 'DM Sans', sans-serif;
   }
-  .card-img img { cursor: zoom-in; }
+  .card-img img { cursor: zoom-in; pointer-events: none; }
+  .card-img { cursor: zoom-in; }
 </style>
 </head>
 <body>
@@ -795,8 +796,11 @@ function renderCards() {
       ? `<a class="btn-contact" href="mailto:${contact}?subject=Interesse: ${encodeURIComponent(item.title)}">Anfragen</a>`
       : "";
 
+    const photos = item.photos || [];
+    const hasPhotos = photos.length > 0;
+    const clickHandler = hasPhotos ? `onclick="openLightbox(${JSON.stringify(photos)}, sliderState[${item.id}] || 0)"` : '';
     card.innerHTML = `
-      <div class="card-img">
+      <div class="card-img" ${clickHandler} style="${hasPhotos ? 'cursor:zoom-in' : ''}">
         ${buildImgArea(item)}
         <span class="status-badge ${statusClass[item.status]}">${statusLabel[item.status]}</span>
       </div>
