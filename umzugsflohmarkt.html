@@ -476,8 +476,8 @@ const ITEMS = [
     id: 1,
     title: "Abtropfkorb",
     cat: "Küche & Haushalt",
-    desc: "Einfaches Metallgestell. Maße ca. 190 cm. Sehr guter Zustand.",
-    price: 5,
+    desc: "Einfaches, schönes Metallgestell. Maße ca. 190 cm. Sauber.",
+    price: 6,
     vb: true,
     status: "available",
     photos: ["fotos/abtropfkorb.jpeg"],          // leer = kein Foto; ein Eintrag = kein Slider; mehrere = Slider
@@ -487,7 +487,7 @@ const ITEMS = [
     id: 2,
     title: "Gasherd LOFRA",
     cat: "Küche & Haushalt",
-    desc: "weiß, unbenutzt. Modell PBP66MFT/C, Grill, Umluft, Effizienzklasse A. Drehschalter, 60cm breit, 70 Liter. NP: 1440€, Rechnung vorhanden.",
+    desc: "Modell PBP66MFT/C, weiß, unbenutzt (!). Grill, Umluft, Effizienzklasse A. Drehschalter, 60cm breit, 70 Liter. NP: 1440€, Rechnung vorhanden.",
     price: 800,
     vb: true,
     status: "available",
@@ -499,7 +499,7 @@ const ITEMS = [
     title: "Induktionsplatte IKEA TILLREDA",
     cat: "Küche & Haushalt",
     desc: "tragbar, weiß. Wie neu, fast unbenutzt, keine Gebrauchsspuren. Leistung: 2000 W.",
-    price: 55,
+    price: 25,
     vb: true,
     status: "available",
     // Beispiel mit mehreren Fotos:
@@ -510,20 +510,20 @@ const ITEMS = [
     id: 4,
     title: "Lattenrost BeCo VARIOFLEX 400, 140x200 cm",
     cat: "Möbel & Wohnen",
-    desc: "Zonen-System für ergonomischen Liegekomfort. Härtegrad verstellbar. Sehr guter Zustand, kaum genutzt. NP: 180€.",
-    price: 50,
-    vb: false,
+    desc: "Zonen-System für ergonomischen Liegekomfort. Härtegrad verstellbar. Sehr guter Zustand, wenig genutzt. NP: 329€.",
+    price: 120,
+    vb: true,
     status: "available",
     photos: ["fotos/lattenrost_1.jpeg", "fotos/lattenrost_2.jpeg", "fotos/lattenrost_3.jpeg", "fotos/lattenrost_4.jpeg"],
     ebay: ""
   },
   {
     id: 5,
-    title: "Luftwäscher VENTA",
+    title: "Luftwäscher VENTA LW45",
     cat: "Küche & Haushalt",
-    desc: "grau. Sehr guter Zustand, kaum genutzt, entkalkt. Mit Rollwagen, Reinigungsmitteln und Originalverpackung. NP: 480€.",
-    price: 90,
-    vb: false,
+    desc: "Wasser als Filter, leise, für Räume bis 68 m², hellgrau. Sehr guter Zustand, kaum genutzt, entkalkt. Mit Rollwagen, Reinigungsmitteln und Originalverpackung. NP: 400€.",
+    price: 130,
+    vb: true,
     status: "available",
     photos: ["fotos/luftbefeuchter_1.jpeg", "fotos/luftbefeuchter_2.jpeg", "fotos/luftbefeuchter_3.jpeg", "fotos/luftbefeuchter_4.jpeg", "fotos/luftbefeuchter_5.jpeg", "fotos/luftbefeuchter_6.jpeg"],
     ebay: ""
@@ -532,7 +532,7 @@ const ITEMS = [
     id: 6,
     title: "Fahrradträger THULE",
     cat: "Sport & Freizeit",
-    desc: "Thule EuroWay G2 920 für 2 Fahrräder. Schnellmontage, Kennzeichenhalter, Abklappmechanismus, Klarglasrückleuchten",
+    desc: "Thule EuroWay G2 920 für 2 Fahrräder. Schnellmontage, Kennzeichenhalter, Abklappmechanismus, Klarglasrückleuchten. NP: 305€.",
     price: 200,
     vb: true,
     status: "available",
@@ -562,6 +562,20 @@ const ITEMS = [
     ebay: "https://www.ebay-kleinanzeigen.de/"
   }
 ];
+/* VORLAGE – ausschneiden und vor ]; einfügen (aber das Komma am Ende weglassen, wenn es der letzte Eintrag ist):
+
+  {
+    id: ,
+    title: "",
+    cat: "",
+    desc: "",
+    price: ,
+    vb: false,
+    status: "available",
+    photos: [],
+    ebay: ""
+  },
+*/
 
 // ════════════════════════════════════════════════════
 //  Ab hier nichts mehr ändern (außer du willst)
