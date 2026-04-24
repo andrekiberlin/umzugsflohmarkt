@@ -734,7 +734,7 @@ function buildImgArea(item) {
   }
 
   if (photos.length === 1) {
-    return `<img src="${photos[0]}" alt="${item.title}" loading="lazy" onclick="openLightbox(${JSON.stringify(photos)}, 0)">`;
+    return `<img src="${photos[0]}" alt="${item.title}" loading="lazy">`;
   }
 
   // Multiple photos → slider
@@ -797,10 +797,9 @@ function renderCards() {
       : "";
 
     const photos = item.photos || [];
-    const hasPhotos = photos.length > 0;
-    const clickHandler = hasPhotos ? `onclick="openLightbox(${JSON.stringify(photos)}, sliderState[${item.id}] || 0)"` : '';
+
     card.innerHTML = `
-      <div class="card-img" ${clickHandler} style="${hasPhotos ? 'cursor:zoom-in' : ''}">
+      <div class="card-img" style="${photos.length > 0 ? 'cursor:zoom-in' : ''}">
         ${buildImgArea(item)}
         <span class="status-badge ${statusClass[item.status]}">${statusLabel[item.status]}</span>
       </div>
@@ -817,6 +816,17 @@ function renderCards() {
         </div>
       </div>`;
 
+    // Lightbox: Klick auf card-img per addEventListener (vermeidet JSON-Anführungszeichen-Probleme)
+    if (photos.length > 0) {
+      const imgArea = card.querySelector(".card-img");
+      imgArea.addEventListener("click", function(e) {
+        // Slider-Buttons nicht abfangen
+        if (e.target.classList.contains("slide-btn") || e.target.classList.contains("dot")) return;
+        const idx = sliderState[item.id] || 0;
+        openLightbox(photos, idx);
+      });
+    }
+
     grid.appendChild(card);
   });
 
@@ -828,6 +838,7 @@ function renderCards() {
   empty.innerHTML = "<p>Keine Artikel gefunden.</p>";
   grid.appendChild(empty);
 }
+
 
 function init() {
   buildStats();
