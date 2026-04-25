@@ -359,6 +359,70 @@
     color: var(--ink-light);
     font-family: 'DM Sans', sans-serif;
   }
+  .price-old {
+    font-size: 0.85rem;
+    color: #aaa;
+    text-decoration: line-through;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    margin-right: 0.3rem;
+  }
+  .price-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+  }
+  /* Tags */
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: 0.2rem;
+  }
+  .tag-chip {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 20px;
+    background: var(--accent-light);
+    color: var(--accent);
+    border: 1px solid #d8b8b6;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .tag-chip:hover { background: #dfc5c3; }
+  /* Tag-Filterleiste */
+  .tag-filter-row {
+    max-width: 1100px;
+    margin: 0.5rem auto 0;
+    padding: 0 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+  }
+  .tag-filter-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-right: 0.3rem;
+  }
+  .tag-filter-btn {
+    padding: 0.35rem 0.8rem;
+    border: 1.5px solid #d8b8b6;
+    background: var(--warm-white);
+    border-radius: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tag-filter-btn:hover { background: var(--accent-light); }
+  .tag-filter-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
 
   .btn-ebay {
     display: inline-flex;
@@ -499,7 +563,7 @@
 <header>
   <div class="header-tag">Umzugsverkauf</div>
   <h1>Andreas' & Patricias Umzugsflohmarkt</h1>
-  <p class="subtitle">Schön, gut erhaltene Dinge suchen neue Besitzer. Einfach stöbern und bei Interesse melden. NB: Wir erweitern die Liste Stück für Stück. Versand in Einzelfällen möglich.</p>
+  <p class="subtitle">Schöne, gut erhaltene Dinge suchen neue Besitzer. Einfach stöbern und bei Interesse melden. NB: Wir erweitern die Liste Stück für Stück. Versand in Einzelfällen möglich.</p>
 </header>
 
 <div class="stats-bar">
@@ -522,6 +586,8 @@
   </div>
   <span class="result-count" id="result-count"></span>
 </div>
+
+<div class="tag-filter-row" id="tag-filter-row" style="display:none"><span class="tag-filter-label">Tags:</span></div>
 
 <div class="grid" id="grid"></div>
 
@@ -638,7 +704,7 @@ const ITEMS = [
     ebay: "https://www.ebay-kleinanzeigen.de/"
   }
 ];
-/* VORLAGE – ausschneiden und vor ]; einfügen (aber das Komma am Ende weglassen, wenn es der letzte Eintrag ist):
+/* VORLAGE – ausschneiden und vor ]; mit Leerzeile einfügen (aber das Komma am Ende weglassen, wenn es der letzte Eintrag ist):
 
   {
     id: ,
@@ -702,9 +768,10 @@ function applyFilters() {
   ITEMS.forEach(item => {
     const card = document.getElementById("card-" + item.id);
     const matchCat    = activeCat === "all" || item.cat === activeCat;
+    const matchTag    = activeTag === "all" || (item.tags && item.tags.includes(activeTag));
     const matchStatus = activeStatus === "all" || item.status === activeStatus;
     const matchSearch = !q || item.title.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q) || item.cat.toLowerCase().includes(q);
-    const show = matchCat && matchStatus && matchSearch;
+    const show = matchCat && matchStatus && matchSearch && matchTag;
     card.classList.toggle("hidden", !show);
     if (show) visible++;
   });
@@ -805,10 +872,14 @@ function renderCards() {
       </div>
       <div class="card-body">
         <span class="card-cat">${item.cat}</span>
+        ${(item.tags && item.tags.length) ? `<div class="card-tags">${item.tags.map(t => `<span class="tag-chip" onclick="setTagFilter('${t}', event)">${t}</span>`).join('')}</div>` : ''}
         <div class="card-title">${item.title}</div>
         <p class="card-desc">${item.desc}</p>
         <div class="card-footer">
-          <span class="price${item.vb ? ' vb' : ''}">€ ${item.price}</span>
+          <div class="price-wrap">
+            ${item.oldPrice ? `<span class="price-old">€ ${item.oldPrice}</span>` : ''}
+            <span class="price${item.vb ? ' vb' : ''}">€ ${item.price}</span>
+          </div>
           <div style="display:flex;gap:0.4rem;flex-wrap:wrap;justify-content:flex-end">
             ${ebayBtn}
             ${contactBtn}
@@ -843,6 +914,7 @@ function renderCards() {
 function init() {
   buildStats();
   buildCategoryFilters();
+  buildTagFilters();
   renderCards();
   applyFilters();
   document.getElementById("last-updated").textContent = new Date().toLocaleDateString("de-DE");
@@ -892,6 +964,43 @@ function lightboxKey(e) {
   if (e.key === "Escape")     {
     document.getElementById("lightbox").classList.remove("open");
     document.removeEventListener("keydown", lightboxKey);
+  }
+}
+
+// ── Tag-Filter ──
+let activeTag = "all";
+
+function buildTagFilters() {
+  const allTags = [...new Set(ITEMS.flatMap(i => i.tags || []))];
+  if (allTags.length === 0) return;
+
+  const row = document.getElementById("tag-filter-row");
+  row.style.display = "flex";
+
+  const allBtn = document.createElement("button");
+  allBtn.className = "tag-filter-btn active";
+  allBtn.textContent = "Alle";
+  allBtn.dataset.tag = "all";
+  allBtn.onclick = () => setTagFilter("all", null, allBtn);
+  row.appendChild(allBtn);
+
+  allTags.forEach(tag => {
+    const btn = document.createElement("button");
+    btn.className = "tag-filter-btn";
+    btn.textContent = tag;
+    btn.dataset.tag = tag;
+    btn.onclick = () => setTagFilter(tag, null, btn);
+    row.appendChild(btn);
+  });
+}
+
+function setTagFilter(tag, e, btn) {
+  if (e) e.stopPropagation();
+  activeTag = tag;
+  document.querySelectorAll(".tag-filter-btn").forEach(b => b.classList.toggle("active", b.dataset.tag === tag));
+  applyFilters();
+  if (tag !== "all") {
+    document.getElementById("tag-filter-row").scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 }
 
