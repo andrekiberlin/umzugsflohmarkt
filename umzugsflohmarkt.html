@@ -562,8 +562,8 @@
 
 <header>
   <div class="header-tag">Umzugsverkauf</div>
-  <h1>Andreas' & Patricias Umzugsflohmarkt</h1>
-  <p class="subtitle">Schöne, gut erhaltene Dinge suchen neue Besitzer. Einfach stöbern und bei Interesse melden. NB: Wir erweitern die Liste Stück für Stück. Versand in Einzelfällen möglich.</p>
+  <h1>Andreas' & Patricias Abschiedsflohmarkt</h1>
+  <p class="subtitle">Schöne Dinge suchen neue Besitzer. Einfach stöbern und bei Interesse melden. NB: Wir erweitern die Liste Stück für Stück. Versand in Einzelfällen möglich.</p>
 </header>
 
 <div class="stats-bar">
@@ -599,15 +599,17 @@
 // ════════════════════════════════════════════════════
 //  DATEN – Hier trägst du deine Artikel ein
 //  Felder:
-//    id        – eindeutig, wird für Anker-Links genutzt (#artikel-1)
+//    id        – eindeutig, wird für Anker-Links genutzt (#card-1)
 //    title     – Bezeichnung
 //    cat       – Kategorie (frei wählbar)
 //    desc      – kurze Beschreibung
-//    price     – Zahl in Euro
+//    oldPrice  – alter Preis (optional, wird durchgestrichen dargestellt)
+//    price     – aktueller Preis in Euro
 //    vb        – true = "Verhandlungsbasis"
 //    status    – "available" | "reserved" | "sold"
-//    photo     – relativer Pfad zur Bilddatei, z.B. "fotos/buch.jpg"
-//               (leer lassen = kein Foto)
+//    photos    – Array mit Bildpfaden, z.B. ["fotos/a.jpg","fotos/b.jpg"]
+//               Leer [] = kein Foto, ein Eintrag = Einzelbild, mehrere = Slider
+//    tags      – Array mit Tags, z.B. ["< 10€", "Neuwertig"] (optional)
 //    ebay      – URL zum Ebay-Inserat (optional, leer lassen wenn keins)
 //    contact   – E-Mail für diesen Artikel (überschreibt die globale)
 // ════════════════════════════════════════════════════
@@ -652,7 +654,7 @@ const ITEMS = [
     id: 4,
     title: "Lattenrost BeCo VARIOFLEX 400, 140x200 cm",
     cat: "Möbel & Wohnen",
-    desc: "Zonen-System für ergonomischen Liegekomfort. Härtegrad verstellbar. Sehr guter Zustand, wenig genutzt. NP: 329€.",
+    desc: "Zonen-System für ergonomischen Liegekomfort. Härtegrad verstellbar. Sehr guter Zustand, wenig genutzt. NP: 330€.",
     price: 120,
     vb: true,
     status: "available",
@@ -675,7 +677,7 @@ const ITEMS = [
     title: "Fahrradträger THULE",
     cat: "Sport & Freizeit",
     desc: "Thule EuroWay G2 920 für 2 Fahrräder. Schnellmontage, Kennzeichenhalter, Abklappmechanismus, Klarglasrückleuchten. NP: 305€.",
-    price: 200,
+    price: 195,
     vb: true,
     status: "available",
     photos: ["fotos/autofahrradtraeger_1.jpeg", "fotos/autofahrradtraeger_2.jpeg", "fotos/autofahrradtraeger_3.jpeg"],
@@ -704,17 +706,19 @@ const ITEMS = [
     ebay: "https://www.ebay-kleinanzeigen.de/"
   }
 ];
-/* VORLAGE – ausschneiden und vor ]; mit Leerzeile einfügen (aber das Komma am Ende weglassen, wenn es der letzte Eintrag ist):
+/* VORLAGE – ausschneiden und vor ]; einfügen:
 
   {
     id: ,
     title: "",
     cat: "",
     desc: "",
+    oldPrice: ,
     price: ,
     vb: false,
     status: "available",
     photos: [],
+    tags: [],
     ebay: ""
   },
 
