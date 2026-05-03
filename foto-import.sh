@@ -23,7 +23,7 @@ if [ -z "$(ls $NEU/*.{jpg,jpeg,JPG,JPEG,png,PNG,heic,HEIC} 2>/dev/null)" ]; then
   exit 1
 fi
 
-# Schritt 1: Komprimieren mit sips (macOS-Bordmittel, kein Install nötig)
+# Schritt 1: Komprimieren mit sips
 echo "Komprimiere Fotos..."
 for f in $NEU/*.{jpg,jpeg,JPG,JPEG,png,PNG,heic,HEIC}; do
   [ -f "$f" ] || continue
@@ -34,7 +34,7 @@ done
 # Schritt 2: Umbenennen und in fotos/ verschieben
 echo "Benenne um und verschiebe..."
 i=1
-for f in $(ls $NEU/*.{jpg,jpeg,JPG,JPEG,png,PNG,heic,HEIC} 2>/dev/null | sort); do
+for f in $(ls $NEU/*.{jpg,jpeg,JPG,JPEG,png,PNG,heic,HEIC} 2>/dev/null | sort -t_ -k2 -n); do
   [ -f "$f" ] || continue
   NEUER_NAME="${BASIS}_${i}.jpg"
   mv "$f" "$ZIEL/$NEUER_NAME"
@@ -43,12 +43,20 @@ for f in $(ls $NEU/*.{jpg,jpeg,JPG,JPEG,png,PNG,heic,HEIC} 2>/dev/null | sort); 
 done
 
 echo ""
-echo "Fertig! ${i-1} Fotos importiert."
-echo ""
-echo "Nicht vergessen: photos-Feld in umzugsflohmarkt.html aktualisieren."
+echo "Fertig! $((i-1)) Fotos importiert."
 echo ""
 
-# Schritt 3: Auf GitHub hochladen
+# Schritt 3: photos-Feld ausgeben
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "In umzugsflohmarkt.html einfügen:"
+echo ""
+printf "photos: ["
+ls $ZIEL/${BASIS}_*.jpg 2>/dev/null | sort -t_ -k2 -n | sed 's|.*/|"fotos/|' | sed 's|$|"|' | tr '\n' ',' | sed 's/,$//'
+printf "],\n"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+# Schritt 4: Auf GitHub hochladen
 cd $REPO
 git add fotos/
 git commit -m "Neue Fotos: $BASIS"
