@@ -1094,8 +1094,18 @@ function init() {
 
   // Direktlink-Unterstützung: #card-3 scrollt zum Artikel
   if (location.hash) {
-    const target = document.querySelector(location.hash.replace("#", "#card-").replace("#card-card-", "#card-"));
-    if (target) setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
+    const hash = location.hash.replace("#card-card-", "#card-").replace(/^#(?!card-)/, "#card-");
+    const target = document.querySelector(hash);
+    if (target) {
+      // Kurz warten bis Bilder geladen und Layout stabil ist
+      setTimeout(() => {
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        // Kurz hervorheben
+        target.style.outline = "3px solid var(--accent)";
+        target.style.outlineOffset = "4px";
+        setTimeout(() => { target.style.outline = ""; target.style.outlineOffset = ""; }, 2000);
+      }, 800);
+    }
   }
 }
 
