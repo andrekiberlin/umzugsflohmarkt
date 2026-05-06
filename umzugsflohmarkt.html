@@ -564,6 +564,7 @@
   <div class="header-tag">Umzugsverkauf</div>
   <h1>Andreas' & Patricias Abschiedsflohmarkt</h1>
   <p class="subtitle">Einige unserer schönen Dinge suchen möglichst bald neue Besitzer.<br>👉 Die Liste wird in den kommenden Tagen erweitert.</p>
+  <p class="subtitle" style="margin-top:0.6rem; font-size:0.82rem; color:#b8b0a8;">Neuester Stand: <span id="last-updated-header"></span></p>
 </header>
 
 <div class="stats-bar">
@@ -614,12 +615,13 @@
 //    contact   – E-Mail für diesen Artikel (überschreibt die globale)
 // ════════════════════════════════════════════════════
 const CONTACT_DEFAULT = "akgoodnews@gmail.com";
+const LAST_UPDATED = "7. Mai 2026";
 
 const ITEMS = [
   {
     id: 23,
     // https://andrekiberlin.github.io/umzugsflohmarkt/umzugsflohmarkt.html#card-23
-    title: "4 antike Eichenstühle, Gründerzeit",
+    title: "4 antike Eichenstühle, Gründerzeitt",
     cat: "Möbel & Wohnen",
     desc: "Zusammengehörendes Set, massive dunkel gebeizte Eiche, ca. 1895–1910. 3 Stühle mit handgeschnitzter Akanthusblatt-Kartusche in der Rückenlehne, 1 Stuhl mit Riefen-Ornamenten. Alle 4 mit Damast-Polster (Beige/Creme), Ziernägeln und Jutegeflecht. Beine mit charakteristischen Ringeinschnitten. Stabil und voll funktionstüchtig. Einzelverkauf möglich (170 € pro Stuhl). Passend dazu: antiker Eichen-Ausziehtisch gleicher Epoche.",
     price: 490,
@@ -1153,6 +1155,7 @@ function init() {
   renderCards();
   applyFilters();
   document.getElementById("last-updated").textContent = new Date().toLocaleDateString("de-DE");
+  document.getElementById("last-updated-header").textContent = LAST_UPDATED;
 
   // Direktlink-Unterstützung: #card-3 scrollt zum Artikel
   if (location.hash) {
